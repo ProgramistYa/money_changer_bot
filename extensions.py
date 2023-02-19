@@ -5,6 +5,7 @@ from config import keys
 class APIException(Exception):
     pass
 
+#    редактор Конвертации валюты
 class Converter:
     @staticmethod
     def get_price(base, sym, amount):

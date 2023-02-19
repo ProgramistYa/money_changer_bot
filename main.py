@@ -2,6 +2,7 @@ import telebot
 from config import *
 from extensions import Converter, APIException
 import traceback
+from telebot import types
 
 bot = telebot.TeleBot(TOKEN)
 # Обрабатываются все сообщения, содержащие команды '/start' or '/help'.
