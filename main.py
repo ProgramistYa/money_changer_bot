@@ -1,26 +1,43 @@
 import telebot
+from telebot import types
+
 from config import *
 from extensions import Converter, APIException
 import traceback
-from telebot import types
+#import time
+
 
 #Можно попробовать добавить смайлики флагов на валюту
 # import emoji
 # print(emoji.emojize('Python is :thumbs_up:'))
 
 bot = telebot.TeleBot(TOKEN)
+
+add_markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+buttons = []
+for val in keys.keys():
+    buttons.append(types.KeyboardButton(val.capitalize()))
+add_markup.add(*buttons)
+
 # Обрабатываются все сообщения, содержащие команды '/start' or '/help'.
 @bot.message_handler(commands=['start'])
 def command_start(message: telebot.types.Message):
-    bot.reply_to(message, f"Этот бот поможет тебе узнать нынешний курс выбранных валют, напиши /help, {message.from_user.first_name}")
+    bot.reply_to(message, f"Этот бот поможет тебе узнать нынешний курс выбранных валют. \nНапиши /help, {message.from_user.first_name}")
 #    bot.send_message(message.chat.id, "Чем помочь?", parse_mode='html')
+
+
+# Для завершения программы командой /stop
+@bot.message_handler(commands=['stop'])
+def stop_command(message):
+    bot.reply_to(message, f"Прощай {message.from_user.first_name}")
+
 
 @bot.message_handler(commands=['help'])
 def command_help(message: telebot.types.Message):
     bot.reply_to(message, f"Чтобы начать работу введите команду боту в следующем формате:\n<имя валюты> \
 <в какую валюту надо перевести>\
 <количество первой валюты>\nУвидеть список всех доступных валют: /values")
-    text = "Так же есть команда /convert для ступенчатого конвертирования"
+    text = "Так же есть команда /convert для ступенчатого конвертирования. \nТак же можно остановить бота командой /stop"
     bot.send_message(message.chat.id, text)
 @bot.message_handler(commands=['values'])
 def command_values(message: telebot.types.Message):
@@ -32,13 +49,13 @@ def command_values(message: telebot.types.Message):
 @bot.message_handler(commands=['convert'])
 def values(message: telebot.types.Message):
     text = 'Выберите валюту, из которой конвертировать:'
-    bot.send_message(message.chat.id, text)
+    bot.send_message(message.chat.id, text, reply_markup=add_markup)
     bot.register_next_step_handler(message, base_handler)
 
 def base_handler(message: telebot.types.Message):
     base = message.text.strip()
     text = 'Выберите валюту, в которую конвертировать:'
-    bot.send_message(message.chat.id, text)
+    bot.send_message(message.chat.id, text, reply_markup=add_markup)
     bot.register_next_step_handler(message, sym_handler, base)
 
 def sym_handler(message: telebot.types.Message, base):
@@ -77,6 +94,7 @@ def converter(message: telebot.types.Message):
 @bot.message_handler(content_types=['document', 'audio', 'photo'])
 def say_lmao(message: telebot.types.Message):
     bot.reply_to(message, f'Хороший мем:D, {message.from_user.first_name}')
+
 
 bot.polling(none_stop=True)
 
