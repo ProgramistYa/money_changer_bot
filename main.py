@@ -13,6 +13,7 @@ import traceback
 
 bot = telebot.TeleBot(TOKEN)
 
+#создание кнопки соприжжение с моим ключом
 add_markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
 buttons = []
 for val in keys.keys():
@@ -22,15 +23,14 @@ add_markup.add(*buttons)
 # Обрабатываются все сообщения, содержащие команды '/start' or '/help'.
 @bot.message_handler(commands=['start'])
 def command_start(message: telebot.types.Message):
-    bot.reply_to(message, f"Этот бот поможет тебе узнать нынешний курс выбранных валют. \nНапиши /help, {message.from_user.first_name}")
+    bot.reply_to(message, f"<b>Этот бот поможет тебе узнать нынешний курс выбранных валют.</b> "
+                          f"\nНапиши /help, {message.from_user.first_name}", parse_mode="html")
 #    bot.send_message(message.chat.id, "Чем помочь?", parse_mode='html')
-
 
 # Для завершения программы командой /stop
 @bot.message_handler(commands=['stop'])
 def stop_command(message):
     bot.reply_to(message, f"Прощай {message.from_user.first_name}")
-
 
 @bot.message_handler(commands=['help'])
 def command_help(message: telebot.types.Message):
@@ -48,20 +48,20 @@ def command_values(message: telebot.types.Message):
 
 @bot.message_handler(commands=['convert'])
 def values(message: telebot.types.Message):
-    text = 'Выберите валюту, из которой конвертировать:'
-    bot.send_message(message.chat.id, text, reply_markup=add_markup)
+    text = f'<b>Выберите валюту, из которой конвертировать:</b>'
+    bot.send_message(message.chat.id, text, reply_markup=add_markup, parse_mode="html")
     bot.register_next_step_handler(message, base_handler)
 
 def base_handler(message: telebot.types.Message):
     base = message.text.strip()
-    text = 'Выберите валюту, в которую конвертировать:'
-    bot.send_message(message.chat.id, text, reply_markup=add_markup)
+    text = f'<b>Выберите валюту, в которую конвертировать:</b>'
+    bot.send_message(message.chat.id, text, reply_markup=add_markup,  parse_mode="html")
     bot.register_next_step_handler(message, sym_handler, base)
 
 def sym_handler(message: telebot.types.Message, base):
     sym = message.text.strip()
-    text = 'Выберите сумму конвертации:'
-    bot.send_message(message.chat.id, text)
+    text = f'<b>Напишите сумму конвертации:</b>'
+    bot.send_message(message.chat.id, text, parse_mode="html")
     bot.register_next_step_handler(message, amount_handler, base, sym)
 
 def amount_handler(message: telebot.types.Message, base, sym):
@@ -94,7 +94,6 @@ def converter(message: telebot.types.Message):
 @bot.message_handler(content_types=['document', 'audio', 'photo'])
 def say_lmao(message: telebot.types.Message):
     bot.reply_to(message, f'Хороший мем:D, {message.from_user.first_name}')
-
 
 bot.polling(none_stop=True)
 
