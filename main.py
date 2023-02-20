@@ -23,7 +23,7 @@ add_markup.add(*buttons)
 # Обрабатываются все сообщения, содержащие команды '/start' or '/help'.
 @bot.message_handler(commands=['start'])
 def command_start(message: telebot.types.Message):
-    bot.reply_to(message, f"<b>Этот бот поможет тебе узнать нынешний курс выбранных валют.</b> "
+    bot.reply_to(message, f"<b>Этот бот поможет тебе узнать нынешний курс восьми выбранных валют.</b> "
                           f"\nНапиши /help, {message.from_user.first_name}", parse_mode="html")
 #    bot.send_message(message.chat.id, "Чем помочь?", parse_mode='html')
 
