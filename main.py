@@ -4,6 +4,10 @@ from extensions import Converter, APIException
 import traceback
 from telebot import types
 
+#Можно попробовать добавить смайлики флагов на валюту
+# import emoji
+# print(emoji.emojize('Python is :thumbs_up:'))
+
 bot = telebot.TeleBot(TOKEN)
 # Обрабатываются все сообщения, содержащие команды '/start' or '/help'.
 @bot.message_handler(commands=['start'])
@@ -24,7 +28,6 @@ def command_values(message: telebot.types.Message):
     for key in keys.keys():
         text = '\n'.join((text, key, ))
     bot.reply_to(message, text)
-
 
 @bot.message_handler(commands=['convert'])
 def values(message: telebot.types.Message):
@@ -53,7 +56,6 @@ def amount_handler(message: telebot.types.Message, base, sym):
     else:
         text = f'Цена {amount} {base} в {sym} : {new_price}'
         bot.send_message(message.chat.id, text)
-
 
 @bot.message_handler(content_types=['text'])
 def converter(message: telebot.types.Message):
