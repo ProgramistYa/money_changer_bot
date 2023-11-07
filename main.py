@@ -95,7 +95,7 @@ def converter(message: telebot.types.Message):
 
         answer = Converter.get_price(*commands)
     except APIException as e:
-        bot.reply_to(message, f"Ошибка в команде:\n{e}")
+        bot.reply_to(message, f"Ошибка в команде:\n Напиши команду /help{e}")
     except Exception as e:
         traceback.print_tb(e.__traceback__)
         bot.reply_to(message, f"Неизвестная ошибка:\n{e}")
